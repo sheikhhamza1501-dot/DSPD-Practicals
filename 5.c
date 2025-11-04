@@ -1,113 +1,93 @@
-#include<stdio.h>
-#include<stdlib.h>
-struct node
-{
-	int data;
-	struct node*right;
-	struct node*left;
+#include <stdio.h>
+#include <stdlib.h>
+struct node {
+    int data;
+    struct node* left;
+    struct node* right;
 };
-
-struct node*create(int data)
-{
-	struct node*newnode;
-	newnode=(struct node*)malloc(sizeof(struct node));
-	newnode->data=data;
-	newnode->left=NULL;
-	newnode->right=NULL;
-	return newnode;
-	
-}
-struct node*insert(struct node*root,int data)
-{
-	if(root==NULL)
-	{
-		return create(data);
-	}
-	if(data<root->data)
-	{
-		root->left=insert(root->left,data);
-	}
-	else
-	{
-		root->right=insert(root->right,data);
-	}
-	return root;
-	
+struct node* create(int data) {
+    struct node* newnode = (struct node*)malloc(sizeof(struct node));
+    newnode->data = data;
+    newnode->left = newnode->right = NULL;
+    return newnode;
 }
 
-void inorder(struct node*root)
-{
-	if(root!=NULL)
-	{
-		inorder(root->left);
-		printf("%d ",root->data);
-		inorder(root->right);
-	}
-	
+struct node* insert(int nodecount, int* nodeinserted) {
+    if (*nodeinserted >= nodecount) 
+	return NULL;
+
+    int data;
+    printf("Enter node data (-1 for NULL): ");
+    scanf("%d", &data);
+
+    if (data == -1) 
+	return NULL;
+
+    struct node* newnode = create(data);
+    (*nodeinserted)++;
+
+    printf("Enter left child of %d:\n", data);
+    newnode->left = insert(nodecount, nodeinserted);
+
+    printf("Enter right child of %d:\n", data);
+    newnode->right = insert(nodecount, nodeinserted);
+
+    return newnode;
+}
+void inorder(struct node* root) {
+    if (root != NULL) {
+        inorder(root->left);
+        printf("%d ", root->data);
+        inorder(root->right);
+    }
+}
+void preorder(struct node* root) {
+    if (root != NULL) {
+        printf("%d ", root->data);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+void postorder(struct node* root) {
+    if (root != NULL) {
+        postorder(root->left);
+        postorder(root->right);
+        printf("%d ", root->data);
+    }
+}
+void search(struct node* root, int key) {
+    if (root == NULL) 
+	return;
+    if (root->data == key) {
+        printf("Found\n");
+        return;
+    }
+    search(root->left, key);
+    search(root->right, key);
 }
 
-void preorder(struct node*root)
-{
-	if(root!=NULL)
-	{
-		printf("%d ",root->data);
-		preorder(root->left);
-		preorder(root->right);
-	}
+int main() {
+    struct node* root = NULL;
+    int n, nodeinserted = 0, key;
+
+    printf("Enter number of nodes: ");
+    scanf("%d", &n);
+
+    printf("Create binary tree:\n");
+    root = insert(n, &nodeinserted);
+
+    printf("\nInorder traversal: ");
+    inorder(root);
+    printf("\nPreorder traversal: ");
+    preorder(root);
+    printf("\nPostorder traversal: ");
+    postorder(root);
+
+    printf("\n\nEnter element to search: ");
+    scanf("%d", &key);
+    search(root, key);
+
+    return 0;
 }
 
-void postorder(struct node*root)
-{
-	if(root!=NULL)
-	{
-		postorder(root->left);
-		postorder(root->right);
-		printf("%d ",root->data);
-	}
-}
 
-void search(struct node*root,int k)
-{
-	if(root==NULL)
-	{
-		printf("NULL\n");
-		return;
-	}
-	if(root->data==k)
-	{
-		printf("found\n");
-		return;
-	}
-	else if(k<root->data)
-	{
-		search(root->left,k);
-	}
-	else
-	{
-		search(root->right,k);
-	}
-}
-int main()
-{
-	struct node*root=NULL;
-	int i,k,data,n;
-	printf("enter number of nodes: ");
-	scanf("%d",&n);
-	for(i=0;i<n;i++)
-	{
-		printf("\n enter value of %d node:",i+1);
-		scanf("%d",&data);
-		
-		root=insert(root,data);
-	}
-	printf("\n inorder traversal:");
-	inorder(root);
-	printf("\n preorder traversal:");
-	preorder(root);
-	printf("\n postorder traversal:");
-	postorder(root);
-	printf("\n enter element to search:");
-	scanf("%d",&k);
-	search(root,k);
-	return 0;
-}
