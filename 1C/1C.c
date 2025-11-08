@@ -30,7 +30,7 @@ for(i=0;i<n-1;i++)
 {
 	for(j=i+1;j<n;j++)
 	{
-		if(s[i].avg<s[i].avg)
+		if(s[i].avg<s[j].avg)
 		{
 			temp=s[i];
 			s[i]=s[j];
@@ -48,5 +48,6 @@ for(i=0;i<n;i++)
 
 	return 0;
 }
+
 
 
